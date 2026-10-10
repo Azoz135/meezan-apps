@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ميزان | Mizan Nutrition & Calories</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#090d16">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+
+    <!-- الشاشة الافتتاحية -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-glow"></div>
+        <div class="splash-content">
+            <div class="splash-logo-icon">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h1>ميزان <span class="badge-pro">PRO</span></h1>
+            <p class="splash-tagline">«افهم غذاءك. أتقن اختياراتك.»</p>
+            <p class="splash-sub">رحلتك نحو وعي غذائي أفضل تبدأ من هنا.</p>
+            <button class="btn-splash-enter" onclick="dismissSplash()">ابدأ التجربة</button>
+        </div>
+    </div>
+
+    <!-- الحاوية الرئيسية للتطبيق -->
+    <div class="app-layout-wrapper" id="app-wrapper">
+        
+        <!-- القائمة الجانبية للشاشات الكبيرة (كمبيوتر وآيباد) -->
+        <aside class="desktop-sidebar" id="desktop-sidebar">
+            <div class="sidebar-logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>ميزان التغذية</span>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="sidebar-item active" onclick="switchPage('home', event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>الرئيسية</span>
+                </button>
+                <button class="sidebar-item" onclick="switchPage('food', event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    <span>الطعام</span>
+                </button>
+                <button class="sidebar-item" onclick="switchPage('stats', event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    <span>الإحصائيات</span>
+                </button>
+                <button class="sidebar-item" onclick="switchPage('weight', event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/></svg>
+                    <span>الوزن</span>
+                </button>
+                <button class="sidebar-item" onclick="switchPage('profile', event)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>حسابي</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="ai-sidebar-btn" onclick="openAiScanner()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                    <span>مسح بالذكاء الاصطناعي</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="app-main-content">
+            
+            <!-- رأس التطبيق العلوي -->
+            <header class="app-header">
+                <div class="header-user-info">
+                    <div class="user-greeting" id="header-greeting">صباح الخير، بطلنا</div>
+                    <h1 class="header-date-title" id="current-date-title">اليوم</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="header-icon-btn" onclick="showToast('لا توجد إشعارات جديدة')" title="الإشعارات">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    </button>
+                    <button class="header-icon-btn" onclick="switchPage('profile')" title="الإعدادات">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- المحتوى الأساسي -->
+            <main class="app-content-body">
+
+                <!-- 1. الصفحة الرئيسية -->
+                <section id="page-home" class="page-view active">
+                    
+                    <div class="date-navigator-card">
+                        <button id="prev-day-btn" class="nav-arrow-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                        <span id="date-display" class="date-display-text">اليوم</span>
+                        <button id="next-day-btn" class="nav-arrow-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="dashboard-grid-hero">
+                        <div class="card premium-card calorie-hero-card">
+                            <div class="calorie-ring-box">
+                                <svg class="progress-ring-svg" width="180" height="180">
+                                    <circle class="ring-bg-track" cx="90" cy="90" r="76"></circle>
+                                    <circle id="ring-progress" class="ring-fill-bar" cx="90" cy="90" r="76"></circle>
+                                </svg>
+                                <div class="ring-inner-content">
+                                    <span id="remaining-calories-val" class="hero-big-num">1,850</span>
+                                    <span class="hero-label">المتبقي (سعرة)</span>
+                                </div>
+                            </div>
+                            <div class="calorie-sub-stats">
+                                <div class="sub-stat-box">
+                                    <span class="s-val" id="target-calories-val">2,000</span>
+                                    <span class="s-lbl">الهدف</span>
+                                </div>
+                                <div class="stat-separator"></div>
+                                <div class="sub-stat-box">
+                                    <span class="s-val" id="consumed-calories-val">150</span>
+                                    <span class="s-lbl">المستهلك</span>
+                                </div>
+                                <div class="stat-separator"></div>
+                                <div class="sub-stat-box">
+                                    <span class="s-val" id="burned-calories-val">0</span>
+                                    <span class="s-lbl">المحروق</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- المغذيات والماء -->
+                        <div class="hero-side-stack">
+                            <div class="card premium-card macros-box-card">
+                                <h3>المغذيات الكبرى (Macros)</h3>
+                                <div class="macro-row-item">
+                                    <div class="macro-info-top">
+                                        <span>البروتين</span>
+                                        <span><strong id="protein-consumed">10</strong> / <span id="protein-target">130</span> جم</span>
+                                    </div>
+                                    <div class="pro-progress-bar"><div id="protein-bar" class="pro-fill protein-c" style="width: 8%"></div></div>
+                                </div>
+                                <div class="macro-row-item">
+                                    <div class="macro-info-top">
+                                        <span>الكربوهيدرات</span>
+                                        <span><strong id="carbs-consumed">20</strong> / <span id="carbs-target">200</span> جم</span>
+                                    </div>
+                                    <div class="pro-progress-bar"><div id="carbs-bar" class="pro-fill carbs-c" style="width: 10%"></div></div>
+                                </div>
+                                <div class="macro-row-item">
+                                    <div class="macro-info-top">
+                                        <span>الدهون</span>
+                                        <span><strong id="fat-consumed">5</strong> / <span id="fat-target">65</span> جم</span>
+                                    </div>
+                                    <div class="pro-progress-bar"><div id="fat-bar" class="pro-fill fat-c" style="width: 7%"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="card premium-card water-mini-card">
+                                <div class="water-card-head">
+                                    <div class="water-title-group">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                        <h3>تتبع الماء</h3>
+                                    </div>
+                                    <span id="water-amount-text" class="water-count-lbl">0 / 2500 مل</span>
+                                </div>
+                                <div class="water-glasses-row" id="water-glasses-container"></div>
+                                <div class="water-quick-btns">
+                                    <button class="btn-sub-water" onclick="addWater(-250)">-250 مل</button>
+                                    <button class="btn-add-water" onclick="addWater(250)">+250 مل</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الوجبات اليومية -->
+                    <div class="meals-section-container">
+                        <div class="section-title-row">
+                            <h3>الوجبات اليومية</h3>
+                            <button class="btn-text-action" onclick="openFoodSearch('breakfast')">+ إضافة سريعة</button>
+                        </div>
+
+                        <!-- الإفطار -->
+                        <div class="meal-card-item card premium-card" data-meal="breakfast">
+                            <div class="meal-card-header">
+                                <div class="meal-title-wrap">
+                                    <div class="meal-icon-box breakfast-i">🍳</div>
+                                    <div>
+                                        <h4>الإفطار</h4>
+                                        <span class="meal-cals-sub" id="breakfast-cals">0 سعرة حرارية</span>
+                                    </div>
+                                </div>
+                                <button class="meal-add-btn" onclick="openFoodSearch('breakfast')">+</button>
+                            </div>
+                            <div class="meal-items-list-box" id="breakfast-items">
+                                <p class="empty-text">لا توجد أطعمة مسجلة في هذه الوجبة</p>
+                            </div>
+                        </div>
+
+                        <!-- الغداء -->
+                        <div class="meal-card-item card premium-card" data-meal="lunch">
+                            <div class="meal-card-header">
+                                <div class="meal-title-wrap">
+                                    <div class="meal-icon-box lunch-i">🍲</div>
+                                    <div>
+                                        <h4>الغداء</h4>
+                                        <span class="meal-cals-sub" id="lunch-cals">0 سعرة حرارية</span>
+                                    </div>
+                                </div>
+                                <button class="meal-add-btn" onclick="openFoodSearch('lunch')">+</button>
+                            </div>
+                            <div class="meal-items-list-box" id="lunch-items">
+                                <p class="empty-text">لا توجد أطعمة مسجلة في هذه الوجبة</p>
+                            </div>
+                        </div>
+
+                        <!-- العشاء -->
+                        <div class="meal-card-item card premium-card" data-meal="dinner">
+                            <div class="meal-card-header">
+                                <div class="meal-title-wrap">
+                                    <div class="meal-icon-box dinner-i">🥗</div>
+                                    <div>
+                                        <h4>العشاء</h4>
+                                        <span class="meal-cals-sub" id="dinner-cals">0 سعرة حرارية</span>
+                                    </div>
+                                </div>
+                                <button class="meal-add-btn" onclick="openFoodSearch('dinner')">+</button>
+                            </div>
+                            <div class="meal-items-list-box" id="dinner-items">
+                                <p class="empty-text">لا توجد أطعمة مسجلة في هذه الوجبة</p>
+                            </div>
+                        </div>
+
+                        <!-- الوجبات الخفيفة -->
+                        <div class="meal-card-item card premium-card" data-meal="snacks">
+                            <div class="meal-card-header">
+                                <div class="meal-title-wrap">
+                                    <div class="meal-icon-box snacks-i">🍎</div>
+                                    <div>
+                                        <h4>وجبات خفيفة</h4>
+                                        <span class="meal-cals-sub" id="snacks-cals">0 سعرة حرارية</span>
+                                    </div>
+                                </div>
+                                <button class="meal-add-btn" onclick="openFoodSearch('snacks')">+</button>
+                            </div>
+                            <div class="meal-items-list-box" id="snacks-items">
+                                <p class="empty-text">لا توجد أطعمة مسجلة في هذه الوجبة</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- زر تصوير الوجبة العائم -->
+                    <button class="ai-floating-scan-btn" onclick="openAiScanner()">
+                        <div class="ai-btn-glow"></div>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                        <span>صوّر وجبتك بالذكاء الاصطناعي 📸</span>
+                    </button>
+                </section>
+
+                <!-- 2. صفحة الطعام والبحث -->
+                <section id="page-food" class="page-view">
+                    <div class="page-header-title">
+                        <h2>قاعدة الأطعمة والبحث</h2>
+                        <p>اختر طعامك المفضل أو أنشئ صنفاً خاصاً بك</p>
+                    </div>
+
+                    <div class="ai-banner-premium" onclick="openAiScanner()">
+                        <div class="ai-banner-icon">✨</div>
+                        <div class="ai-banner-text">
+                            <h4>ماسح الأطعمة بالذكاء الاصطناعي الفعلي</h4>
+                            <p>صوّر طبقك لتحليل السعرات والمغذيات فوراً بدقة عالية</p>
+                        </div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+
+                    <div class="search-input-wrapper">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="food-search-input" placeholder="ابحث عن أي صنف غذائي..." oninput="filterFoods()">
+                    </div>
+
+                    <div class="custom-tabs-nav">
+                        <button class="tab-item-btn active" onclick="switchFoodTab('database')">قاعدة الأطعمة</button>
+                        <button class="tab-item-btn" onclick="switchFoodTab('favorites')">المفضلة</button>
+                        <button class="tab-item-btn" onclick="switchFoodTab('custom')">إضافة صنف مخصص</button>
+                    </div>
+
+                    <div id="food-tab-database" class="food-tab-pane active">
+                        <div class="card premium-card food-scroll-container" id="global-food-list"></div>
+                    </div>
+
+                    <div id="food-tab-favorites" class="food-tab-pane">
+                        <div class="card premium-card food-scroll-container" id="favorites-food-list">
+                            <p class="empty-state-text">ليس لديك أطعمة مفضلة محفوظة بعد</p>
+                        </div>
+                    </div>
+
+                    <div id="food-tab-custom" class="food-tab-pane">
+                        <form id="custom-food-form" class="card premium-card form-styled-card" onsubmit="saveCustomFood(event)">
+                            <h3>إنشاء صنف غذائي جديد</h3>
+                            <div class="form-group-item">
+                                <label>اسم الصنف</label>
+                                <input type="text" id="custom-name" required placeholder="مثال: وجبة البروتين الخاصة">
+                            </div>
+                            <div class="form-row-dual">
+                                <div class="form-group-item">
+                                    <label>السعرات (لكل 100جم)</label>
+                                    <input type="number" id="custom-cals" required placeholder="0">
+                                </div>
+                                <div class="form-group-item">
+                                    <label>البروتين (جم)</label>
+                                    <input type="number" id="custom-protein" required placeholder="0">
+                                </div>
+                            </div>
+                            <div class="form-row-dual">
+                                <div class="form-group-item">
+                                    <label>الكربوهيدرات (جم)</label>
+                                    <input type="number" id="custom-carbs" required placeholder="0">
+                                </div>
+                                <div class="form-group-item">
+                                    <label>الدهون (جم)</label>
+                                    <input type="number" id="custom-fat" required placeholder="0">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary-glow full-width-btn">حفظ الصنف في قاعدة البيانات</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- 3. صفحة الإحصائيات -->
+                <section id="page-stats" class="page-view">
+                    <div class="page-header-title">
+                        <h2>الإحصائيات والتقارير</h2>
+                        <p>تتبع أداءك وسجلاتك الأسبوعية والشهرية</p>
+                    </div>
+                    <div class="card premium-card stats-overview-box">
+                        <h3>متوسط السعرات للأسبوع الحالي</h3>
+                        <div class="big-stat-display"><span id="weekly-avg-cals">1,820</span> <small>سعرة / يوم</small></div>
+                    </div>
+                    <div class="card premium-card">
+                        <h3 style="margin-bottom: 15px;">الرسم البياني الأسبوعي</h3>
+                        <div class="weekly-bars-wrapper" id="weekly-bars"></div>
+                    </div>
+                </section>
+
+                <!-- 4. صفحة الوزن -->
+                <section id="page-weight" class="page-view">
+                    <div class="page-header-title">
+                        <h2>تتبع الوزن والقياسات</h2>
+                        <p>راقب تقدمك نحو هدفك الجسماني بدقة</p>
+                    </div>
+                    <div class="card premium-card weight-highlight-card">
+                        <div>
+                            <span class="lbl-small">الوزن الحالي المسجل</span>
+                            <h2 id="current-weight-display">75.0 <small>كجم</small></h2>
+                        </div>
+                        <button class="btn-primary-glow" onclick="openWeightModal()">+ تسجيل وزن جديد</button>
+                    </div>
+                    <div class="card premium-card">
+                        <h3 style="margin-bottom: 15px;">سجل القياسات السابقة</h3>
+                        <div id="weight-history-list" class="history-list-box">
+                            <p class="empty-state-text">لا توجد قياسات مسجلة بعد</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. صفحة حسابي والإعدادات -->
+                <section id="page-profile" class="page-view">
+                    <div class="page-header-title">
+                        <h2>حسابي والإعدادات</h2>
+                        <p>إدارة تفضيلاتك وأهدافك الشخصية</p>
+                    </div>
+                    <div class="card premium-card profile-user-card">
+                        <div class="user-avatar-circle">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <div class="user-info-text">
+                            <h3 id="profile-name">عضو ميزان المميز</h3>
+                            <p id="profile-goal-desc">الهدف: المحافظة على اللياقة والصحة</p>
+                        </div>
+                    </div>
+                    <div class="card premium-card settings-group-card">
+                        <h3>الأهداف اليومية</h3>
+                        <div class="setting-row-item">
+                            <span>السعرات المستهدفة (سعرة)</span>
+                            <input type="number" id="setting-target-cals" value="2000" onchange="updateSettings()">
+                        </div>
+                        <div class="setting-row-item">
+                            <span>هدف الماء اليومي (مل)</span>
+                            <input type="number" id="setting-target-water" value="2500" onchange="updateSettings()">
+                        </div>
+                    </div>
+                    <div class="card premium-card settings-group-card danger-zone-box">
+                        <button class="btn-danger-outline full-width-btn" onclick="resetAllData()">إعادة ضبط كافة البيانات وتصفير السجلات</button>
+                    </div>
+                </section>
+
+            </main>
+
+            <!-- شريط التنقل السفلي للجوال -->
+            <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+                <button class="mobile-nav-btn active" onclick="switchPage('home', event)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>الرئيسية</span>
+                </button>
+                <button class="mobile-nav-btn" onclick="switchPage('food', event)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    <span>الطعام</span>
+                </button>
+                <button class="mobile-nav-btn" onclick="switchPage('stats', event)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    <span>الإحصائيات</span>
+                </button>
+                <button class="mobile-nav-btn" onclick="switchPage('weight', event)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/></svg>
+                    <span>الوزن</span>
+                </button>
+                <button class="mobile-nav-btn" onclick="switchPage('profile', event)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>حسابي</span>
+                </button>
+            </nav>
+
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة: إضافة طعام لوجبة -->
+    <div id="food-modal" class="modal-overlay">
+        <div class="modal-card-box">
+            <div class="modal-header-row">
+                <h3 id="modal-meal-title">إضافة طعام</h3>
+                <button class="close-modal-x" onclick="closeModal('food-modal')">&times;</button>
+            </div>
+            <div class="modal-search-box">
+                <input type="text" id="modal-search-input" placeholder="ابحث في قاعدة الأطعمة..." oninput="filterModalFoods()">
+            </div>
+            <div class="modal-scroll-list" id="modal-food-results"></div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة: تحديد الكمية -->
+    <div id="quantity-modal" class="modal-overlay">
+        <div class="modal-card-box small-box">
+            <div class="modal-header-row">
+                <h3 id="selected-food-name">تحديد الحصة</h3>
+                <button class="close-modal-x" onclick="closeModal('quantity-modal')">&times;</button>
+            </div>
+            <div class="quantity-body-content">
+                <p id="selected-food-base-info" class="text-sub-info">100 جرام تحتوي على 0 سعرة</p>
+                <div class="form-group-item">
+                    <label>الكمية بالجرام / الحصة:</label>
+                    <input type="number" id="food-quantity-input" value="100" min="1" oninput="calculatePreviewNutrition()">
+                </div>
+                <div class="preview-nutrition-grid">
+                    <div>السعرات: <strong id="preview-cals">0</strong></div>
+                    <div>بروتين: <strong id="preview-protein">0</strong>جم</div>
+                    <div>كاربو: <strong id="preview-carbs">0</strong>جم</div>
+                    <div>دهون: <strong id="preview-fat">0</strong>جم</div>
+                </div>
+                <button class="btn-primary-glow full-width-btn" onclick="confirmAddFoodToMeal()">تأكيد وإضافة للسجل</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة: تصوير الوجبة وتحليلها بالذكاء الاصطناعي (محدثة لتציير النتائج الغذائية المختصرة) 📸 -->
+    <div id="ai-scanner-modal" class="modal-overlay">
+        <div class="modal-card-box ai-modal-box">
+            <div class="modal-header-row">
+                <h3>📸 تحليل الطبق بالذكاء الاصطناعي</h3>
+                <button class="close-modal-x" onclick="closeModal('ai-scanner-modal')">&times;</button>
+            </div>
+            <div class="ai-scanner-body">
+                <div id="ai-upload-area" class="ai-upload-box" onclick="document.getElementById('ai-file-input').click()">
+                    <div id="ai-upload-placeholder">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                        <p>اضغط لالتقاط صورة الطبق أو اختر من الألبوم</p>
+                    </div>
+                    <img id="ai-preview-img" class="ai-preview-image hidden" alt="صورة الوجبة">
+                </div>
+                <input type="file" id="ai-file-input" accept="image/*" capture="environment" class="hidden" onchange="handleImageSelected(event)">
+                
+                <div id="ai-loading-box" class="ai-loading-wrapper hidden">
+                    <div class="pro-spinner"></div>
+                    <p id="ai-loading-text">جاري فحص صورة الطبق وتحليل خصائصه البصرية بدقة...</p>
+                </div>
+
+                <!-- تحذير الصورة غير الواضحة -->
+                <div id="ai-unclear-box" class="ai-unclear-wrapper hidden">
+                    <p>⚠️ الصورة غير واضحة أو الإضاءة غير كافية لتقدير الكمية بدقة.</p>
+                    <button class="btn-primary-glow full-width-btn" style="margin-top: 12px;" onclick="document.getElementById('ai-file-input').click()">إعادة التقاط صورة واضحة</button>
+                </div>
+
+                <!-- واجهة النتائج الغذائية المختصرة والفاخرة -->
+                <div id="ai-result-box" class="ai-result-wrapper hidden">
+                    <div class="ai-hero-calories-card">
+                        <span class="ai-cals-title">إجمالي السعرات الحرارية التقديرية</span>
+                        <div class="ai-cals-big-num"><span id="ai-res-cals">0</span> <small>سعرة</small></div>
+                        <span class="ai-confidence-badge" id="ai-res-confidence">مستوى الثقة: عالي</span>
+                    </div>
+
+                    <div class="ai-macros-grid-box">
+                        <div class="ai-macro-box">
+                            <span class="am-lbl">البروتين</span>
+                            <strong id="ai-res-protein">0</strong> <small>جم</small>
+                        </div>
+                        <div class="ai-macro-box">
+                            <span class="am-lbl">الكربوهيدرات</span>
+                            <strong id="ai-res-carbs">0</strong> <small>جم</small>
+                        </div>
+                        <div class="ai-macro-box">
+                            <span class="am-lbl">الدهون</span>
+                            <strong id="ai-res-fat">0</strong> <small>جم</small>
+                        </div>
+                        <div class="ai-macro-box">
+                            <span class="am-lbl">الألياف</span>
+                            <strong id="ai-res-fiber">0</strong> <small>جم</small>
+                        </div>
+                    </div>
+
+                    <!-- إمكانية تعديل القيم أو الحفظ -->
+                    <div class="form-group-item" style="margin-top: 15px;">
+                        <label>اختر الوجبة للإضافة إليها:</label>
+                        <select id="ai-target-meal" class="select-dropdown-styled">
+                            <option value="breakfast">إفطار</option>
+                            <option value="lunch" selected>غداء</option>
+                            <option value="dinner">عشاء</option>
+                            <option value="snacks">وجبات خفيفة</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary-glow full-width-btn" onclick="addAiResultToMeal()">حفظ الوجبة في سجل اليوم</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة: تسجيل الوزن -->
+    <div id="weight-modal" class="modal-overlay">
+        <div class="modal-card-box small-box">
+            <div class="modal-header-row">
+                <h3>تسجيل الوزن الجديد</h3>
+                <button class="close-modal-x" onclick="closeModal('weight-modal')">&times;</button>
+            </div>
+            <div class="form-group-item" style="margin-top: 15px;">
+                <label>الوزن الحالي (كجم):</label>
+                <input type="number" step="0.1" id="new-weight-input" placeholder="75.0">
+            </div>
+            <button class="btn-primary-glow full-width-btn" onclick="saveNewWeight()">حفظ القياس في السجل</button>
+        </div>
+    </div>
+
+    <!-- نظام التنبيهات Toast -->
+    <div id="toast-notification" class="toast-notification">تمت العملية بنجاح</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
